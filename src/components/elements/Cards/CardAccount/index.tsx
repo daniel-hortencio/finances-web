@@ -1,0 +1,96 @@
+import { Box, Button, Text } from "@chakra-ui/react";
+
+import Icon from "../../Icon";
+import { AccountType } from "../../../../types/Account";
+import { Currency } from "../../../../enums/Currency";
+
+import { Category } from "../../../../types/Category";
+import { currencyMask } from "../../../../utils/masks/currencyMask";
+import { dateFormat } from "../../../../utils/date";
+
+interface Props {
+  value: number;
+  date: string;
+  description: string;
+  currency: Currency;
+  type: AccountType;
+  category: Omit<Category, "id_category" | "created_at" | "id_user">;
+  handleDelete: () => void;
+  handleEdit: () => void;
+}
+
+export const CardAccount = ({
+  value,
+  description,
+  date,
+  type,
+  category,
+  currency,
+  handleDelete,
+  handleEdit,
+}: Props) => {
+  return (
+    <Box
+      display="flex"
+      overflow="hidden"
+      borderRadius="md"
+      marginBottom={2}
+      boxShadow="base"
+      bg="white"
+    >
+      {type === "debit" ? (
+        <Box
+          bg={category.background_color}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width={10}
+        >
+          <Icon
+            name={category.icon_name}
+            color={category.icon_color}
+            size={20}
+          />
+        </Box>
+      ) : (
+        <Box
+          bg="#17a589"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width={10}
+        >
+          <Icon name="FaHandHoldingUsd" color="#fff" size={24} />
+        </Box>
+      )}
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flex="auto"
+        padding={2}
+      >
+        <Text>
+          {dateFormat.d_m(date)} - {description}
+        </Text>
+        <Box display="flex" alignItems="center">
+          <Icon
+            name={type === "credit" ? "FiPlus" : "FiMinus"}
+            color={type === "credit" ? "#17a589" : "#e74c3c"}
+          />{" "}
+          <Text marginLeft={2}>
+            <strong>{currencyMask(`${value.toFixed(2)}`)}</strong> {currency}
+          </Text>
+        </Box>
+      </Box>
+      <Box>
+        <Button onClick={handleEdit}>
+          <Icon name="FiEdit3" />
+        </Button>
+        <Button onClick={handleDelete}>
+          <Icon name="FiTrash2" />
+        </Button>
+      </Box>
+    </Box>
+  );
+};
