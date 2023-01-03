@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 
 import { ICreateAccountDTO } from "../../../../types/Account";
@@ -45,7 +45,7 @@ export const FormCreateAccount = ({
 
   const [data, setData] = useState<ICreateAccountDTO>({
     ...init_form,
-    currency: state.user.preferred_currency,
+    currency: state?.user?.preferred_currency,
   } as ICreateAccountDTO);
 
   const handleCreateAccount = async (e: FormEvent) => {
@@ -76,6 +76,8 @@ export const FormCreateAccount = ({
     setData((data) => ({ ...data, [param]: value }));
   };
 
+  const suggestions = useMemo(() => state.names_suggest, []);
+
   return (
     <form onSubmit={handleCreateAccount}>
       <Box marginBottom={2}>
@@ -105,6 +107,7 @@ export const FormCreateAccount = ({
           control={control}
           value={data.description}
           onChange={handleChange}
+          suggestions={suggestions}
         />
       </Box>
       <Grid templateColumns="repeat(2, 1fr)" gap={2} marginBottom={2}>

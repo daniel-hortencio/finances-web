@@ -26,7 +26,7 @@ export const CardBalance = ({ value, currency }: Props) => {
       <strong>{currency}</strong>{" "}
       <Box display="flex" alignItems="center">
         <Icon
-          name={value > 0 ? "FiPlusCircle" : "FiMinusCircle"}
+          name={value > 0 ? "FiPlus" : "FiMinus"}
           color={value > 0 ? "#17a589" : "#e74c3c"}
         />{" "}
         <Box ml={2}>{currencyMask(`${value.toFixed(2)}`)}</Box>

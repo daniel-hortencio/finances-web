@@ -4,7 +4,7 @@ import { accountService } from "../services/Accounts";
 import { api } from "../services/api";
 import { Account, Statement } from "../types/Account";
 import { Category } from "../types/Category";
-import { User } from "../types/User";
+import { UpdateUserPreferencesDTO, User } from "../types/User";
 import { cookies } from "../utils/cookies";
 
 export const userSlice = createSlice({
@@ -12,6 +12,9 @@ export const userSlice = createSlice({
   initialState: null as User | null,
   reducers: {
     authenticateUser: (state, { payload }) => {
+      const { language, email, name, id_user, preferred_currency } =
+        payload.user as User;
+
       setCookie(null, "FinancesWeb.token", payload.token, {
         path: "/",
         expires: new Date(payload.refresh_token.expiresIn * 1000),
@@ -22,10 +25,32 @@ export const userSlice = createSlice({
         payload.refresh_token.id_refresh_token,
         { path: "/", expires: new Date(payload.refresh_token.expiresIn * 1000) }
       );
-      setCookie(null, "FinancesWeb.user", JSON.stringify(payload.user), {
-        path: "/",
-        expires: new Date(payload.refresh_token.expiresIn * 1000),
-      });
+      setCookie(
+        null,
+        "FinancesWeb.userInfos",
+        JSON.stringify({
+          id_user,
+          name,
+          email,
+        }),
+        {
+          path: "/",
+          expires: new Date(payload.refresh_token.expiresIn * 1000),
+        }
+      );
+
+      setCookie(
+        null,
+        "FinancesWeb.userPreferences",
+        JSON.stringify({
+          language,
+          preferred_currency,
+        }),
+        {
+          path: "/",
+          expires: new Date(payload.refresh_token.expiresIn * 1000),
+        }
+      );
 
       api.defaults.headers.common["auth"] = `Bearer ${payload.token.id_token}`;
 
@@ -38,15 +63,28 @@ export const userSlice = createSlice({
 
       return null;
     },
+    setUserPreferences: (state, { payload }) => {
+      const { language, preferred_currency } =
+        payload as UpdateUserPreferencesDTO;
+
+      return {
+        ...(state as User),
+        language,
+        preferred_currency,
+      };
+    },
     recoverUserByCookies: () => {
-      const { token, user } = cookies.getAll();
+      const { token, user_infos, user_preferences } = cookies.getAll();
 
       if (token) {
         api.defaults.headers.common["auth"] = `Bearer ${token}`;
       }
 
-      if (user) {
-        return user;
+      if (user_infos && user_preferences) {
+        return {
+          ...user_infos,
+          ...user_preferences,
+        };
       }
     },
   },
@@ -59,9 +97,16 @@ export const statementSlice = createSlice({
     setStatement: (state, { payload }) => {
       return payload;
     },
-    /* removeAccount: (state, { payload }) => {
-      return state.filter((account) => account.id_account !== payload);
-    }, */
+  },
+});
+
+export const namesSuggestSlice = createSlice({
+  name: "names_suggest",
+  initialState: [] as string[],
+  reducers: {
+    setNamesSuggest: (state, { payload }) => {
+      return payload;
+    },
   },
 });
 
@@ -83,18 +128,28 @@ export const store = configureStore({
     user: userSlice.reducer,
     statements: statementSlice.reducer,
     categories: categoriesSlice.reducer,
+    names_suggest: namesSuggestSlice.reducer,
   },
 });
 
-export const useAuthenticateUser = (state: any) => {
+export const useAuthenticateUser = (state: {
+  categories: Category[];
+  user: User | null;
+  statements: Statement[];
+  names_suggest: string[];
+}) => {
   return state;
 };
 
-export const { authenticateUser, logoutUser, recoverUserByCookies } =
-  userSlice.actions;
-export const { setStatement, /* removeAccount */ } = statementSlice.actions;
+export const {
+  authenticateUser,
+  logoutUser,
+  recoverUserByCookies,
+  setUserPreferences,
+} = userSlice.actions;
+export const { setStatement } = statementSlice.actions;
 export const { setCategories, removeCategory } = categoriesSlice.actions;
-
+export const { setNamesSuggest } = namesSuggestSlice.actions;
 
 export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}

@@ -40,7 +40,7 @@ export const FormCreateIncome = ({ onSuccess, onClose }: Props) => {
 
   const [data, setData] = useState<ICreateAccountDTO>({
     ...init_form,
-    currency: state.user.preferred_currency,
+    currency: state?.user?.preferred_currency,
   } as ICreateAccountDTO);
 
   const handleCreateAccount = async (e: FormEvent) => {

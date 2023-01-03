@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -40,8 +40,11 @@ const AuthenticatedLayout = ({ children, title }: Props) => {
     <p>Loading...</p>
   ) : (
     <Box bg="gray.100" minHeight="100vh">
-      <Header title={title} />
-      <Box as="main" maxW="4xl" marginX="auto" marginTop={8}>
+      <Header />
+      <Box as="main" maxW="4xl" marginX="auto" marginTop={8} px={4}>
+        <Heading size="lg" mb={8}>
+          {title}
+        </Heading>
         {children}
       </Box>
     </Box>

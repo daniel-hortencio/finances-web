@@ -1,4 +1,12 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
 
 import Icon from "../../Icon";
 import { AccountType } from "../../../../types/Account";
@@ -34,7 +42,7 @@ export const CardAccount = ({
       display="flex"
       overflow="hidden"
       borderRadius="md"
-      marginBottom={2}
+      marginTop={2}
       boxShadow="base"
       bg="white"
     >
@@ -84,12 +92,20 @@ export const CardAccount = ({
         </Box>
       </Box>
       <Box>
-        <Button onClick={handleEdit}>
-          <Icon name="FiEdit3" />
-        </Button>
-        <Button onClick={handleDelete}>
-          <Icon name="FiTrash2" />
-        </Button>
+        <Menu>
+          <MenuButton as={Button} textAlign="center" background="white">
+            <Icon name="MdMoreVert" size={24} />
+          </MenuButton>
+          <MenuList width={10}>
+            <MenuItem onClick={handleEdit}>
+              <Icon name="FiEdit3" />
+              <Text marginLeft={4}>Editar</Text>
+            </MenuItem>
+            <MenuItem onClick={handleDelete}>
+              <Icon name="FiTrash2" /> <Text marginLeft={4}>Deletar</Text>
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Box>
     </Box>
   );

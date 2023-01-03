@@ -1,5 +1,12 @@
-import { ChangeEventHandler, HTMLInputTypeAttribute, useEffect } from "react";
-import { FormControl, FormLabel, Input, Box } from "@chakra-ui/react";
+import { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Box,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 import {
   Control,
   Controller,
@@ -18,6 +25,8 @@ interface Props {
   type?: HTMLInputTypeAttribute;
   control?: Control<FieldValues, any>;
   mask?: (value: string) => string;
+  suggestions?: string[];
+  disabled?: boolean;
 }
 
 export const InputText = ({
@@ -30,12 +39,25 @@ export const InputText = ({
   value,
   mask,
   onChange,
+  suggestions,
+  disabled = false,
 }: Props) => {
   const { register, unregister, clearErrors } = useFormContext();
+  const [showSuggest, setShowSuggest] = useState(false);
 
   useEffect(() => {
     return unregister(name);
   }, []);
+
+  const hasSuggestions = () => {
+    if (!suggestions) return false;
+
+    return (
+      suggestions?.filter((suggestion) =>
+        suggestion.toUpperCase().includes((value as string).toUpperCase())
+      ).length > 0
+    );
+  };
 
   return control ? (
     <Controller
@@ -48,7 +70,18 @@ export const InputText = ({
               <FormLabel>{label}</FormLabel>
               <span>{fieldState?.error?.message}</span>
             </Box>{" "}
+            <Box
+              onClick={() => setShowSuggest(false)}
+              width="100vw"
+              height="100vh"
+              top={0}
+              left={0}
+              position="fixed"
+              display={showSuggest && hasSuggestions() ? "auto" : "none"}
+              zIndex={showSuggest && hasSuggestions() ? 2 : -1}
+            />
             <Input
+              position="relative"
               type={type}
               {...field}
               required={required}
@@ -58,7 +91,45 @@ export const InputText = ({
                 clearErrors(name);
                 onChange && onChange(name, mask ? mask(value) : value);
               }}
+              onFocus={() => setShowSuggest(true)}
+              autoComplete="off"
+              zIndex={showSuggest ? "overlay" : "auto"}
+              disabled={disabled}
             />
+            {showSuggest && hasSuggestions() && onChange && (
+              <Box
+                position="absolute"
+                bottom={0}
+                transform="translateY(100%)"
+                zIndex={2}
+                maxHeight={200}
+                overflowY="scroll"
+                overflowX="hidden"
+                width="100%"
+              >
+                {suggestions
+                  ?.filter((suggestion) =>
+                    suggestion
+                      .toUpperCase()
+                      .includes((value as string).toUpperCase())
+                  )
+                  .map((suggestion) => (
+                    <Button
+                      textAlign="left"
+                      key={suggestion}
+                      width="100%"
+                      onClick={() => {
+                        onChange(name, suggestion);
+                        setShowSuggest(false);
+                      }}
+                      type="button"
+                      borderRadius="none"
+                    >
+                      <Text w="100%">{suggestion}</Text>
+                    </Button>
+                  ))}
+              </Box>
+            )}
           </FormControl>
         );
       }}
@@ -69,7 +140,12 @@ export const InputText = ({
         <FormLabel>{label}</FormLabel>
         <span>{error}</span>
       </Box>{" "}
-      <Input type={type} {...register(name)} required={required} />
+      <Input
+        type={type}
+        {...register(name)}
+        required={required}
+        disabled={disabled}
+      />
     </FormControl>
   );
 };

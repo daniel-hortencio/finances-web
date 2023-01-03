@@ -8,21 +8,19 @@ class ExchangeService {
 
     constructor(private readonly api: AxiosInstance) { }
 
-    getByUser() {
-        return this.api.get(this.route)
-    }
-
     create(dto: ICreateExchangeDTO) {
         return this.api.post(this.route, dto)
     }
 
-    /*  delete(id_account: string) {
-         return this.api.delete(this.route, { params: { id_account } })
-     }
- 
-     update(dto: IUpdateAccountDTO) {
-         return this.api.put(`${this.route}?id_account=${dto.id_account}`, dto)
-     } */
+    delete(id_exchange: string) {
+        console.log({ id_exchange })
+        return this.api.delete(`${this.route}?id_exchange=${id_exchange}`)
+    }
+
+    /*  
+    update(dto: IUpdateAccountDTO) {
+        return this.api.put(`${this.route}?id_account=${dto.id_account}`, dto)
+    } */
 
 }
 

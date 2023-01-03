@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
 import AuthenticatedLayout from "../components/layouts/AuthenticatedLayout";
 
-import { Categories } from "../components/pages/Categories";
+import { Settings } from "../components/pages/Settings";
 import { useAuthenticateUser } from "../store";
-import { TranslationsPageCategories } from "../translations/pages/Categories";
+import { TranslationsPageSettings } from "../translations/pages/Settings";
 
 export default function PageBalance() {
   const state = useSelector(useAuthenticateUser);
 
   return (
     <AuthenticatedLayout
-      title={TranslationsPageCategories(state.user?.language).title}
+      title={TranslationsPageSettings(state.user?.language).title}
     >
-      <Categories />
+      <Settings />
     </AuthenticatedLayout>
   );
 }

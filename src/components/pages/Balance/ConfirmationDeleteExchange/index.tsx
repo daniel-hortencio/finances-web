@@ -1,21 +1,22 @@
 import { Box, Button, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 
-import { accountService } from "../../../../services/Accounts";
+import { exchangeService } from "../../../../services/Exchanges";
 import { Account } from "../../../../types/Account";
+import { Exchange } from "../../../../types/Exchange";
 import { dateFormat } from "../../../../utils/date";
 import { currencyMask } from "../../../../utils/masks/currencyMask";
 import Icon from "../../../elements/Icon";
 
 interface Props {
-  account: Account | null;
+  exchange: Exchange | null;
   onSuccess: () => void;
   onClose: () => void;
 }
 
-export const FormDeleteAccount = ({ account, onSuccess, onClose }: Props) => {
+export const FormDeleteExchange = ({ exchange, onSuccess, onClose }: Props) => {
   function handleDelete() {
-    if (account) {
-      accountService.delete(account?.id_account).then(() => {
+    if (exchange) {
+      exchangeService.delete(exchange.id_exchange).then(() => {
         onSuccess();
         onClose();
       });
@@ -28,20 +29,19 @@ export const FormDeleteAccount = ({ account, onSuccess, onClose }: Props) => {
         <Icon name="FiAlertTriangle" size={80} />
       </Box>
       <Heading size="md" textAlign="center" mb={2}>
-        Tem certeza que deseja excluir essa conta?
+        Tem certeza que deseja excluir esse cambio?
       </Heading>
       <Text fontSize={18} mb={2}>
-        {dateFormat.d_m_y(account?.date as string)} -{" "}
-        <Text fontWeight="semibold" as="strong">
-          {account?.description}
-        </Text>
+        {dateFormat.d_m_y(exchange?.date as string)} -{" "}
       </Text>
       <Box display="flex" alignItems="center">
-        <Icon
-          name={account?.type === "credit" ? "FiPlusCircle" : "FiMinusCircle"}
-        />
+        <Icon name="FiMinusCircle" />
         <Text fontSize={18} ml={2}>
-          {currencyMask(`${account?.value}`)} {account?.currency}
+          {currencyMask(`${exchange?.input_value}`)} {exchange?.input_currency}
+        </Text>
+        <Icon name="FiPlusCircle" />
+        <Text fontSize={18} ml={2}>
+          {currencyMask(`${exchange?.input_value}`)} {exchange?.input_currency}
         </Text>
       </Box>
 

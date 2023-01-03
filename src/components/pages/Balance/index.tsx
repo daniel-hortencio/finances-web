@@ -19,16 +19,18 @@ import {
 
 import { accountService } from "../../../services/Accounts";
 import { categoryService } from "../../../services/Categories";
-import { balanceService } from "../../../services/Balance";
-import { Account } from "../../../types/Account";
-import { Balance as BalanceTypes } from "../../../types/Balance";
+import { Account, Statement } from "../../../types/Account";
 import { Category } from "../../../types/Category";
 import { FormCreateAccount } from "./FormAccount/FormCreateAccount";
 import { CardAccount } from "../../elements/Cards/CardAccount";
 import { Modal } from "../../elements/Modal";
 import { FormDeleteAccount } from "./ConfirmationDeleteAccount";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategories, useAuthenticateUser } from "../../../store";
+import {
+  setCategories,
+  setNamesSuggest,
+  useAuthenticateUser,
+} from "../../../store";
 import { setStatement } from "../../../store";
 import { FormUpdateAccount } from "./FormAccount/FormUpdateAccount";
 import { CardBalance } from "../../elements/Cards/CardBalance";
@@ -37,16 +39,20 @@ import { getMonth } from "../../../utils/getMonth";
 import { FormCreateIncome } from "./FormIncome/FormCreateIncome";
 import { FormCreateExchange } from "./FormExchange/FormCreateExchange";
 import { CardExchange } from "../../elements/Cards/CardExchange";
-import { getBalance } from "../../../utils/getBalance";
+import { getStatistic, MovementByCurrency } from "../../../utils/getStatistic";
+import { FormDeleteExchange } from "./ConfirmationDeleteExchange";
+import { Exchange } from "../../../types/Exchange";
+import { currencyMask } from "../../../utils/masks/currencyMask";
+import { AccordionHeader } from "../../elements/Accordion/AccordionHeader";
 
 type ModalParamsType = {
   show: boolean;
-  operation: "update" | "create" | "delete";
+  operation: "update" | "create" | "delete-account" | "delete-exchange";
   modal_title: string;
 };
 
 export const Balance = () => {
-  const [balance, setBalance] = useState<BalanceTypes | null>(null);
+  const [balance, setBalance] = useState<MovementByCurrency[]>([]);
   const [showModal, setShowModal] = useState<ModalParamsType>({
     show: false,
     operation: "create",
@@ -54,6 +60,9 @@ export const Balance = () => {
   });
 
   const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
+  const [exchangeToDelete, setExchangeToDelete] = useState<Exchange | null>(
+    null
+  );
   const [accountToUpdate, setAccountToUpdate] = useState<Account | null>(null);
   const [isFetchingAccounts, setIsFetchingAccounts] = useState(true);
 
@@ -70,6 +79,10 @@ export const Balance = () => {
       .catch((err) => {
         console.log({ err });
       });
+
+    accountService.getNamesSuggest().then(({ data }) => {
+      dispatch(setNamesSuggest(data));
+    });
   }
 
   useEffect(() => {
@@ -86,7 +99,9 @@ export const Balance = () => {
   }, []);
 
   useEffect(() => {
-    getBalance(state.statements);
+    const statistics = getStatistic(state.statements);
+
+    setBalance(statistics.total);
   }, [state.statements]);
 
   function getCategory(id_category: string | undefined) {
@@ -112,7 +127,7 @@ export const Balance = () => {
   }
 
   function openModal(
-    operation: "update" | "create" | "delete",
+    operation: "update" | "create" | "delete-account" | "delete-exchange",
     modal_title: string
   ) {
     setShowModal({ show: true, operation, modal_title });
@@ -130,13 +145,13 @@ export const Balance = () => {
         <Heading size="md" mb={2}>
           Balance
         </Heading>
-        <Box>
+        <Box display="flex">
           {balance ? (
-            balance.balances?.map((balance) => (
+            balance?.map((balance) => (
               <CardBalance
                 key={balance.currency}
                 currency={balance.currency}
-                value={balance.value}
+                value={balance.total}
               />
             ))
           ) : (
@@ -183,29 +198,20 @@ export const Balance = () => {
             <TabPanels>
               <TabPanel paddingX={0}>
                 <FormCreateIncome
-                  onSuccess={() => {
-                    getAccounts();
-                    /* getBalance(); */
-                  }}
+                  onSuccess={() => getAccounts()}
                   onClose={closeModal}
                 />
               </TabPanel>
               <TabPanel paddingX={0}>
                 <FormCreateAccount
                   categories={state.categories}
-                  onSuccess={() => {
-                    getAccounts();
-                    /* getBalance(); */
-                  }}
+                  onSuccess={() => getAccounts()}
                   onClose={closeModal}
                 />
               </TabPanel>
               <TabPanel paddingX={0}>
                 <FormCreateExchange
-                  onSuccess={() => {
-                    getAccounts();
-                    /* getBalance(); */
-                  }}
+                  onSuccess={() => getAccounts()}
                   onClose={closeModal}
                 />
               </TabPanel>
@@ -213,13 +219,18 @@ export const Balance = () => {
           </Tabs>
         )}
 
-        {showModal.operation === "delete" && (
+        {showModal.operation === "delete-account" && (
           <FormDeleteAccount
             account={accountToDelete}
-            /* onSuccess={() =>
-              dispatch(removeAccount(accountToDelete?.id_account))
-            } */
-            onSuccess={() => {}}
+            onSuccess={() => getAccounts()}
+            onClose={closeModal}
+          />
+        )}
+
+        {showModal.operation === "delete-exchange" && (
+          <FormDeleteExchange
+            exchange={exchangeToDelete}
+            onSuccess={() => getAccounts()}
             onClose={closeModal}
           />
         )}
@@ -228,10 +239,7 @@ export const Balance = () => {
           <FormUpdateAccount
             defaultData={accountToUpdate}
             categories={state.categories}
-            onSuccess={() => {
-              getAccounts();
-              /* getBalance(); */
-            }}
+            onSuccess={() => getAccounts()}
             onClose={closeModal}
           />
         )}
@@ -249,17 +257,15 @@ export const Balance = () => {
           ))
         ) : (
           <Accordion defaultIndex={[0]} allowMultiple>
-            {state?.statements.map((statement: any) => (
-              <AccordionItem key={statement.month + statement.year}>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    <Text fontWeight={600} as="span">
-                      {getMonth(statement.month)}
-                    </Text>{" "}
-                    {statement.year}
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
+            {state?.statements.map((statement: Statement) => (
+              <AccordionItem
+                key={statement.month + statement.year}
+                bg="white"
+                boxShadow="base"
+                borderRadius="md"
+                marginBottom={2}
+              >
+                <AccordionHeader statement={statement} />
 
                 <AccordionPanel pb={4}>
                   {statement.movements.map((account: any) => {
@@ -275,7 +281,7 @@ export const Balance = () => {
                           type={account.type}
                           handleDelete={() => {
                             setAccountToDelete(account);
-                            openModal("delete", "Delete Account");
+                            openModal("delete-account", "Delete Account");
                           }}
                           handleEdit={() => {
                             setAccountToUpdate(account);
@@ -299,13 +305,10 @@ export const Balance = () => {
                           output_currency={account.output_currency}
                           date={account.date}
                           handleDelete={() => {
-                            setAccountToDelete(account);
-                            openModal("delete", "Delete Exchange");
+                            setExchangeToDelete(account);
+                            openModal("delete-exchange", "Delete Exchange");
                           }}
-                          handleEdit={() => {
-                            setAccountToUpdate(account);
-                            //openModal("update_exchange", "Update Exchange");
-                          }}
+                          handleEdit={() => {}}
                         />
                       );
                     }

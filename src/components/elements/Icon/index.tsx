@@ -5,8 +5,18 @@ import * as Cg from "react-icons/cg";
 import * as Bi from "react-icons/bi";
 import * as Io from "react-icons/io";
 import * as Bs from "react-icons/bs";
+import * as Hi from "react-icons/hi";
 
-export const AllIcons = { ...Fi, ...Md, ...Fa, ...Cg, ...Bi, ...Io, ...Bs };
+export const AllIcons = {
+  ...Fi,
+  ...Md,
+  ...Fa,
+  ...Cg,
+  ...Bi,
+  ...Io,
+  ...Bs,
+  ...Hi,
+};
 
 interface IconProps {
   name: string;

@@ -12,6 +12,10 @@ class AccountService {
         return this.api.get(this.route)
     }
 
+    getNamesSuggest() {
+        return this.api.get(`${this.route}/names-suggest`)
+    }
+
     create(dto: ICreateAccountDTO) {
         return this.api.post(this.route, dto)
     }

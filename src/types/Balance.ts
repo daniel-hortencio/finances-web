@@ -1,6 +1,6 @@
 import { Currency } from "../enums/Currency";
 
-type BalanceByCurrency = {
+export type BalanceByCurrency = {
     value: number;
     currency: Currency;
 }

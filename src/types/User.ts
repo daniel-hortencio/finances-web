@@ -17,6 +17,12 @@ export interface CreateUserDTO extends Omit<User, "id_user" | "created_at"> {
 
 export type SignInUserDTO = Omit<User, "id_user" | "name" | "language" | "created_at" | "preferred_currency">
 
+export type UpdateUserPreferencesDTO = Omit<User, "id_user" | "created_at" | "email" | "password" | "name">
+
+export type UpdateUserInfosDTO = {
+  name: string;
+}
+
 export type RefreshTokenDTO = {
   id_refresh_token: string;
   id_user: string;
