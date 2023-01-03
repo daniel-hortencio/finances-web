@@ -27,6 +27,10 @@ interface Props {
   onClose: () => void;
 }
 
+interface IUpdateAccountInputValues extends Omit<IUpdateAccountDTO, "value"> {
+  value: string;
+}
+
 export const FormUpdateAccount = ({
   categories,
   defaultData,
@@ -41,12 +45,12 @@ export const FormUpdateAccount = ({
 
   const state = useSelector(useAuthenticateUser);
 
-  const [data, setData] = useState<IUpdateAccountDTO>({
+  const [data, setData] = useState<IUpdateAccountInputValues>({
     ...defaultData,
-    value: mask.currency(`${defaultData.value as string}`),
+    value: mask.currency(`${defaultData.value.toFixed(2)}`),
     date: dateFormat.y_m_d(defaultData.date),
     currency: state?.user?.preferred_currency,
-  } as IUpdateAccountDTO);
+  } as IUpdateAccountInputValues);
 
   const handleCreateAccount = async (e: FormEvent) => {
     e.preventDefault();

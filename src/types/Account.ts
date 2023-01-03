@@ -21,9 +21,7 @@ export type Account = {
     id_category?: string;
 }
 
-export interface IUpdateAccountDTO extends Omit<Account, 'created_at' | 'id_user' | 'value'> {
-    value: string | number;
-};
+export type IUpdateAccountDTO = Omit<Account, 'created_at' | 'id_user'>
 
 export interface ICreateAccountDTO extends Omit<Account, 'id_account' | 'created_at' | 'value' | 'id_user'> {
     value: string | number;
