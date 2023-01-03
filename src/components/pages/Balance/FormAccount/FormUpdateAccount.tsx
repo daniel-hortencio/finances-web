@@ -43,8 +43,9 @@ export const FormUpdateAccount = ({
 
   const [data, setData] = useState<IUpdateAccountDTO>({
     ...defaultData,
+    value: mask.currency(`${defaultData.value as string}`),
     date: dateFormat.y_m_d(defaultData.date),
-    currency: state.user.preferred_currency,
+    currency: state?.user?.preferred_currency,
   } as IUpdateAccountDTO);
 
   const handleCreateAccount = async (e: FormEvent) => {
@@ -116,7 +117,7 @@ export const FormUpdateAccount = ({
             control={control}
             mask={mask.currency}
             error={errors.value?.message as string}
-            value={`${data.value}`}
+            value={data.value as string}
             onChange={handleChange}
           />
         </GridItem>

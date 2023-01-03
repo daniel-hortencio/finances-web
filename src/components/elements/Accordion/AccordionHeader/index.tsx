@@ -31,7 +31,9 @@ export const AccordionHeader = ({ statement }: Props) => {
               color={balance_by_currency.total > 0 ? "#17a589" : "#e74c3c"}
             />{" "}
             <Text>
-              {currencyMask(`${balance_by_currency.total.toFixed(2)}`)}
+              <Text as="strong" mr={2}>
+                {currencyMask(`${balance_by_currency.total.toFixed(2)}`)}
+              </Text>
               {balance_by_currency.currency}
             </Text>
           </Box>
