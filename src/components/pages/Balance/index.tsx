@@ -133,6 +133,8 @@ export const Balance = () => {
     setShowModal({ show: true, operation, modal_title });
   }
 
+  console.log({ balance });
+
   return (
     <>
       <Box

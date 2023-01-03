@@ -26,7 +26,10 @@ export const AccordionHeader = ({ statement }: Props) => {
             display="flex"
             alignItems="center"
           >
-            <Icon name={balance_by_currency.total < 0 ? "FiPlus" : "FiMinus"} />{" "}
+            <Icon
+              name={balance_by_currency.total < 0 ? "FiMinus" : "FiPlus"}
+              color={balance_by_currency.total > 0 ? "#17a589" : "#e74c3c"}
+            />{" "}
             <Text>
               {currencyMask(`${balance_by_currency.total.toFixed(2)}`)}
               {balance_by_currency.currency}

@@ -172,6 +172,7 @@ const Menu = () => {
         left={0}
         display={{ base: isExpanded ? "auto" : "none", lg: "none" }}
         onClick={() => setIsExpanded(false)}
+        cursor="auto"
       />
     </>
   );
