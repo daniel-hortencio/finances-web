@@ -5,10 +5,13 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../../store";
 import Icon from "../../../elements/Icon";
+import { LogoutConfirmation } from "../LogoutConfirmation";
+import { Modal } from "../../../elements/Modal";
 
 const Menu = () => {
   const { route } = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showModalConfirmLogout, setShowModalConfirmLogout] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,7 +47,7 @@ const Menu = () => {
         bg="white"
         minHeight={{ lg: "100vh" }}
         zIndex={3}
-        boxShadow="base"
+        boxShadow={{ base: "none", lg: "base" }}
       >
         <Box
           width="full"
@@ -138,7 +141,7 @@ const Menu = () => {
 
           <Box
             as="button"
-            onClick={() => dispatch(logoutUser())}
+            onClick={() => setShowModalConfirmLogout(true)}
             display="flex"
             alignItems="center"
             fontWeight={600}
@@ -174,6 +177,17 @@ const Menu = () => {
         onClick={() => setIsExpanded(false)}
         cursor="auto"
       />
+
+      <Modal
+        isOpen={showModalConfirmLogout}
+        onClose={() => setShowModalConfirmLogout(false)}
+        title="Confirm Logout?"
+      >
+        <LogoutConfirmation
+          onClose={() => setShowModalConfirmLogout(false)}
+          onSuccess={() => dispatch(logoutUser())}
+        />
+      </Modal>
     </>
   );
 };

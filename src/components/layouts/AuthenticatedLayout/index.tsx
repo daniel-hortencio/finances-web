@@ -30,6 +30,7 @@ const AuthenticatedLayout = ({ children, title }: Props) => {
 
   useEffect(() => {
     if (state.user === null && !isSSR()) {
+      console.log({ router });
       router.push("/");
     } else {
       setLoadingPage(false);

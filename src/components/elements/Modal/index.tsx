@@ -1,12 +1,9 @@
 import { ReactNode } from "react";
 import {
-  Box,
-  Button,
   Modal as ModalChakra,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";

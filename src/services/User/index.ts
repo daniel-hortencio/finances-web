@@ -21,6 +21,10 @@ class UserService {
     updateUserInfos(dto: UpdateUserInfosDTO) {
         return this.api.put("/user/infos", dto)
     }
+
+    logout() {
+        return this.api.post("user/logout")
+    }
 }
 
 export const userService = new UserService(api)

@@ -37,8 +37,8 @@ export const FormCreateExchange = ({ onSuccess, onClose }: Props) => {
 
   const [data, setData] = useState<ICreateExchangeDTO>({
     ...init_form,
-    input_currency: state.user.preferred_currency,
-    output_currency: state.user.preferred_currency,
+    input_currency: state?.user?.preferred_currency,
+    output_currency: state?.user?.preferred_currency,
   } as ICreateExchangeDTO);
 
   const handleCreateAccount = async (e: FormEvent) => {
@@ -104,7 +104,7 @@ export const FormCreateExchange = ({ onSuccess, onClose }: Props) => {
         <GridItem w="100%">
           <InputText
             name="output_value"
-            label="Valor de Entrada"
+            label="Valor de Saída"
             control={control}
             mask={mask.currency}
             error={errors.output_value?.message as string}
