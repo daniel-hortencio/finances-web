@@ -192,21 +192,21 @@ export const Balance = () => {
         {showModal.operation === "create" && (
           <Tabs variant="soft-rounded" colorScheme="teal">
             <TabList>
-              <Tab>Income</Tab>
               <Tab>Account</Tab>
+              <Tab>Income</Tab>
               <Tab>Exchange</Tab>
             </TabList>
 
             <TabPanels>
               <TabPanel paddingX={0}>
-                <FormCreateIncome
+                <FormCreateAccount
+                  categories={state.categories}
                   onSuccess={() => getAccounts()}
                   onClose={closeModal}
                 />
               </TabPanel>
               <TabPanel paddingX={0}>
-                <FormCreateAccount
-                  categories={state.categories}
+                <FormCreateIncome
                   onSuccess={() => getAccounts()}
                   onClose={closeModal}
                 />

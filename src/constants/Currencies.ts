@@ -2,24 +2,24 @@ import { Currency } from "../enums/Currency";
 
 export const Currencies: { value: Currency }[] = [
   {
-    value: Currency.USD
+    value: Currency.US
   },
   {
-    value: Currency.BRL
+    value: Currency.BR
   },
   {
-    value: Currency.EUR
+    value: Currency.EU
   },
   {
-    value: Currency.PYG
+    value: Currency.PY
   },
   {
-    value: Currency.ARS
+    value: Currency.AR
   },
   {
-    value: Currency.JPY
+    value: Currency.JP
   },
   {
-    value: Currency.UYU
+    value: Currency.UY
   },
 ]

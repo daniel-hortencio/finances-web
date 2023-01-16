@@ -13,7 +13,7 @@ import {
 } from "react-hook-form";
 
 type Option = {
-  name: string;
+  name: string | JSX.Element;
   value: string;
 };
 
