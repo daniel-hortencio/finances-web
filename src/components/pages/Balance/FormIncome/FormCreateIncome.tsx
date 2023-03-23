@@ -1,22 +1,23 @@
 import { FormEvent, useState } from "react";
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 
-import { ICreateAccountDTO } from "../../../../types/Account";
+import { ICreateTransactionDTO } from "../../../../types/Transaction";
 import { Category } from "../../../../types/Category";
 import { InputText } from "../../../elements/InputText";
 import { Select } from "../../../elements/Select";
 import { useForm } from "react-hook-form";
 import { Currencies } from "../../../../constants/Currencies";
 import { mask } from "../../../../utils/masks";
-import { CreateAccountSchema } from "./CreateIncomeSchema";
+import { CreateTransactionSchema } from "./CreateIncomeSchema";
 import { dateFormat } from "../../../../utils/date";
 import { currencyMaskToNumber } from "../../../../utils/masks/currencyMask";
-import { accountService } from "../../../../services/Accounts";
+import { transactionService } from "../../../../services/Transaction";
 import { yupValidator } from "../../../../utils/yupValidation";
 import { useSelector } from "react-redux";
 import { useAuthenticateUser } from "../../../../store";
 
 interface Props {
+  categories: Category[];
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -29,7 +30,7 @@ const init_form = {
   id_category: "",
 };
 
-export const FormCreateIncome = ({ onSuccess, onClose }: Props) => {
+export const FormCreateIncome = ({ categories, onSuccess, onClose }: Props) => {
   const {
     control,
     setError,
@@ -38,16 +39,16 @@ export const FormCreateIncome = ({ onSuccess, onClose }: Props) => {
 
   const state = useSelector(useAuthenticateUser);
 
-  const [data, setData] = useState<ICreateAccountDTO>({
+  const [data, setData] = useState<ICreateTransactionDTO>({
     ...init_form,
     currency: state?.user?.preferred_currency,
-  } as ICreateAccountDTO);
+  } as ICreateTransactionDTO);
 
-  const handleCreateAccount = async (e: FormEvent) => {
+  const handleCreateTransaction = async (e: FormEvent) => {
     e.preventDefault();
 
     yupValidator({
-      schema: CreateAccountSchema,
+      schema: CreateTransactionSchema,
       data,
       setError,
       onSuccess: () => {
@@ -56,7 +57,7 @@ export const FormCreateIncome = ({ onSuccess, onClose }: Props) => {
           value: currencyMaskToNumber(data.value as string),
         };
 
-        accountService
+        transactionService
           .create(dto)
           .then(() => {
             onSuccess();
@@ -72,7 +73,27 @@ export const FormCreateIncome = ({ onSuccess, onClose }: Props) => {
   };
 
   return (
-    <form onSubmit={handleCreateAccount}>
+    <form onSubmit={handleCreateTransaction}>
+      <Box marginBottom={2}>
+        <Select
+          name="id_category"
+          label="Category"
+          control={control}
+          options={[
+            ...categories.map((category) => ({
+              name: category.name,
+              value: category.id_category,
+            })),
+            {
+              name: "Sem categoría",
+              value: "",
+            },
+          ]}
+          value={data.id_category}
+          onChange={(e) => handleChange("id_category", e.target.value)}
+        />
+      </Box>
+
       <Box marginBottom={2}>
         <InputText
           name="description"

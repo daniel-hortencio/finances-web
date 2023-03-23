@@ -1,7 +1,6 @@
 import { Box, Button, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 
 import { exchangeService } from "../../../../services/Exchanges";
-import { Account } from "../../../../types/Account";
 import { Exchange } from "../../../../types/Exchange";
 import { dateFormat } from "../../../../utils/date";
 import { currencyMask } from "../../../../utils/masks/currencyMask";

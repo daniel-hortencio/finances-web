@@ -1,5 +1,15 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormLabel,
+  Grid,
+  GridItem,
+  Radio,
+  RadioGroup,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { ICreateCategoryDTO } from "../../../../types/Category";
 import { InputText } from "../../../elements/InputText";
@@ -25,6 +35,7 @@ const init_form: InitForm = {
   icon_color: "#fff",
   icon_name: "MdOutlineAttachMoney",
   search_icon: "",
+  type: "debit",
 };
 
 export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
@@ -44,13 +55,14 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
       data,
       setError,
       onSuccess: () => {
-        const { name, background_color, icon_name, icon_color } = data;
+        const { name, background_color, icon_name, icon_color, type } = data;
 
         let dto = {
           name,
           background_color,
           icon_name,
           icon_color,
+          type,
         };
 
         categoryService
@@ -195,7 +207,6 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
             </GridItem>
           </GridItem>
         </Grid>
-
         {openIconNameSearch && (
           <>
             <Box
@@ -246,7 +257,6 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
             </Box>
           </>
         )}
-
         {openIconColorSearch && (
           <>
             <Box
@@ -294,6 +304,21 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
             </Box>
           </>
         )}
+      </Box>
+
+      <Box marginBottom={6}>
+        <Box display="flex">
+          <FormLabel>Tipo</FormLabel>
+        </Box>{" "}
+        <RadioGroup
+          onChange={(value) => handleChange("type", value)}
+          value={data.type}
+        >
+          <Stack direction="row">
+            <Radio value="debit">Debit</Radio>
+            <Radio value="credit">Credit</Radio>
+          </Stack>
+        </RadioGroup>
       </Box>
 
       <Box>

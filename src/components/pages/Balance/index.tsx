@@ -7,8 +7,6 @@ import {
   Text,
   Accordion,
   AccordionItem,
-  AccordionButton,
-  AccordionIcon,
   AccordionPanel,
   Tabs,
   TabList,
@@ -17,14 +15,18 @@ import {
   TabPanels,
 } from "@chakra-ui/react";
 
-import { accountService } from "../../../services/Accounts";
+import { transactionService } from "../../../services/Transaction";
 import { categoryService } from "../../../services/Categories";
-import { Account, Statement } from "../../../types/Account";
+import {
+  Transaction,
+  Statement,
+  TransactionType,
+} from "../../../types/Transaction";
 import { Category } from "../../../types/Category";
-import { FormCreateAccount } from "./FormAccount/FormCreateAccount";
-import { CardAccount } from "../../elements/Cards/CardAccount";
+import { FormCreateTransaction } from "./FormTransaction/FormCreateTransaction";
+import { CardTransaction } from "../../elements/Cards/CardTransaction";
 import { Modal } from "../../elements/Modal";
-import { FormDeleteAccount } from "./ConfirmationDeleteAccount";
+import { FormDeleteTransaction } from "./ConfirmationDeleteTransaction";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCategories,
@@ -32,7 +34,7 @@ import {
   useAuthenticateUser,
 } from "../../../store";
 import { setStatement } from "../../../store";
-import { FormUpdateAccount } from "./FormAccount/FormUpdateAccount";
+import { FormUpdateTransaction } from "./FormTransaction/FormUpdateTransaction";
 import { CardBalance } from "../../elements/Cards/CardBalance";
 import Icon from "../../elements/Icon";
 import { getMonth } from "../../../utils/getMonth";
@@ -47,7 +49,7 @@ import { AccordionHeader } from "../../elements/Accordion/AccordionHeader";
 
 type ModalParamsType = {
   show: boolean;
-  operation: "update" | "create" | "delete-account" | "delete-exchange";
+  operation: "update" | "create" | "delete-transaction" | "delete-exchange";
   modal_title: string;
 };
 
@@ -59,34 +61,36 @@ export const Balance = () => {
     modal_title: "",
   });
 
-  const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<Transaction | null>(null);
   const [exchangeToDelete, setExchangeToDelete] = useState<Exchange | null>(
     null
   );
-  const [accountToUpdate, setAccountToUpdate] = useState<Account | null>(null);
-  const [isFetchingAccounts, setIsFetchingAccounts] = useState(true);
+  const [transactionToUpdate, setTransactionToUpdate] =
+    useState<Transaction | null>(null);
+  const [isFetchingTransactions, setIsFetchingTransactions] = useState(true);
 
   const state = useSelector(useAuthenticateUser);
   const dispatch = useDispatch();
 
-  function getAccounts() {
-    accountService
+  function getTransactions() {
+    transactionService
       .getByUser()
       .then(({ data }) => {
         dispatch(setStatement(data));
-        setIsFetchingAccounts(false);
+        setIsFetchingTransactions(false);
       })
       .catch((err) => {
         console.log({ err });
       });
 
-    accountService.getNamesSuggest().then(({ data }) => {
+    transactionService.getNamesSuggest().then(({ data }) => {
       dispatch(setNamesSuggest(data));
     });
   }
 
   useEffect(() => {
-    getAccounts();
+    getTransactions();
 
     categoryService
       .getByUser()
@@ -100,6 +104,8 @@ export const Balance = () => {
 
   useEffect(() => {
     const statistics = getStatistic(state.statements);
+
+    /* console.log({ statements: state.statements, statistics }); */
 
     setBalance(statistics.total);
   }, [state.statements]);
@@ -115,11 +121,12 @@ export const Balance = () => {
         background_color: "#ccc",
         icon_color: "#fff",
         icon_name: "",
+        type: "debit" as TransactionType,
       };
 
-    const { name, background_color, icon_color, icon_name } = category;
+    const { name, background_color, icon_color, icon_name, type } = category;
 
-    return { name, background_color, icon_color, icon_name };
+    return { name, background_color, icon_color, icon_name, type };
   }
 
   function closeModal() {
@@ -127,13 +134,11 @@ export const Balance = () => {
   }
 
   function openModal(
-    operation: "update" | "create" | "delete-account" | "delete-exchange",
+    operation: "update" | "create" | "delete-transaction" | "delete-exchange",
     modal_title: string
   ) {
     setShowModal({ show: true, operation, modal_title });
   }
-
-  console.log({ balance });
 
   return (
     <>
@@ -172,7 +177,7 @@ export const Balance = () => {
         </Box>
       </Box>
 
-      {!isFetchingAccounts && (
+      {!isFetchingTransactions && (
         <Box marginBottom={6}>
           <Button
             onClick={() => openModal("create", "Create Movement")}
@@ -192,28 +197,33 @@ export const Balance = () => {
         {showModal.operation === "create" && (
           <Tabs variant="soft-rounded" colorScheme="teal">
             <TabList>
-              <Tab>Account</Tab>
+              <Tab>Transaction</Tab>
               <Tab>Income</Tab>
               <Tab>Exchange</Tab>
             </TabList>
 
             <TabPanels>
               <TabPanel paddingX={0}>
-                <FormCreateAccount
-                  categories={state.categories}
-                  onSuccess={() => getAccounts()}
+                <FormCreateTransaction
+                  categories={state.categories.filter(
+                    (category) => category.type === "debit"
+                  )}
+                  onSuccess={() => getTransactions()}
                   onClose={closeModal}
                 />
               </TabPanel>
               <TabPanel paddingX={0}>
                 <FormCreateIncome
-                  onSuccess={() => getAccounts()}
+                  categories={state.categories.filter(
+                    (category) => category.type === "credit"
+                  )}
+                  onSuccess={() => getTransactions()}
                   onClose={closeModal}
                 />
               </TabPanel>
               <TabPanel paddingX={0}>
                 <FormCreateExchange
-                  onSuccess={() => getAccounts()}
+                  onSuccess={() => getTransactions()}
                   onClose={closeModal}
                 />
               </TabPanel>
@@ -221,10 +231,10 @@ export const Balance = () => {
           </Tabs>
         )}
 
-        {showModal.operation === "delete-account" && (
-          <FormDeleteAccount
-            account={accountToDelete}
-            onSuccess={() => getAccounts()}
+        {showModal.operation === "delete-transaction" && (
+          <FormDeleteTransaction
+            transaction={transactionToDelete}
+            onSuccess={() => getTransactions()}
             onClose={closeModal}
           />
         )}
@@ -232,23 +242,25 @@ export const Balance = () => {
         {showModal.operation === "delete-exchange" && (
           <FormDeleteExchange
             exchange={exchangeToDelete}
-            onSuccess={() => getAccounts()}
+            onSuccess={() => getTransactions()}
             onClose={closeModal}
           />
         )}
 
-        {showModal.operation === "update" && accountToUpdate && (
-          <FormUpdateAccount
-            defaultData={accountToUpdate}
-            categories={state.categories}
-            onSuccess={() => getAccounts()}
+        {showModal.operation === "update" && transactionToUpdate && (
+          <FormUpdateTransaction
+            defaultData={transactionToUpdate}
+            categories={state.categories.filter(
+              (category) => category.type === transactionToUpdate.type
+            )}
+            onSuccess={() => getTransactions()}
             onClose={closeModal}
           />
         )}
       </Modal>
 
       <Box>
-        {isFetchingAccounts ? (
+        {isFetchingTransactions ? (
           [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
             <Skeleton
               key={item}
@@ -270,44 +282,47 @@ export const Balance = () => {
                 <AccordionHeader statement={statement} />
 
                 <AccordionPanel pb={4}>
-                  {statement.movements.map((account: any) => {
-                    if (account.id_account)
+                  {statement.movements.map((transaction: any) => {
+                    if (transaction.id_transaction)
                       return (
-                        <CardAccount
-                          key={"account-" + account.id_account}
-                          description={account.description}
-                          value={account.value}
-                          category={getCategory(account.id_category)}
-                          currency={account.currency}
-                          date={account.date}
-                          type={account.type}
+                        <CardTransaction
+                          key={"transaction-" + transaction.id_transaction}
+                          description={transaction.description}
+                          value={transaction.value}
+                          category={getCategory(transaction.id_category)}
+                          currency={transaction.currency}
+                          date={transaction.date}
+                          type={transaction.type}
                           handleDelete={() => {
-                            setAccountToDelete(account);
-                            openModal("delete-account", "Delete Account");
+                            setTransactionToDelete(transaction);
+                            openModal(
+                              "delete-transaction",
+                              "Delete Transaction"
+                            );
                           }}
                           handleEdit={() => {
-                            setAccountToUpdate(account);
+                            setTransactionToUpdate(transaction);
                             openModal(
                               "update",
-                              account.type === "debit"
-                                ? "Update Account"
+                              transaction.type === "debit"
+                                ? "Update Transaction"
                                 : "Update Income"
                             );
                           }}
                         />
                       );
 
-                    if (account.id_exchange) {
+                    if (transaction.id_exchange) {
                       return (
                         <CardExchange
-                          key={"exchange-" + account.id_account}
-                          input_value={account.input_value}
-                          input_currency={account.input_currency}
-                          output_value={account.output_value}
-                          output_currency={account.output_currency}
-                          date={account.date}
+                          key={"exchange-" + transaction.id_transaction}
+                          input_value={transaction.input_value}
+                          input_currency={transaction.input_currency}
+                          output_value={transaction.output_value}
+                          output_currency={transaction.output_currency}
+                          date={transaction.date}
                           handleDelete={() => {
-                            setExchangeToDelete(account);
+                            setExchangeToDelete(transaction);
                             openModal("delete-exchange", "Delete Exchange");
                           }}
                           handleEdit={() => {}}

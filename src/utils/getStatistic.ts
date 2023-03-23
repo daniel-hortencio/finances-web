@@ -1,5 +1,5 @@
 import { Currency } from "../enums/Currency"
-import { Statement, Account } from "../types/Account"
+import { Statement, Transaction } from "../types/Transaction"
 import { Exchange } from "../types/Exchange"
 
 export type MovementByCurrency = {
@@ -36,8 +36,8 @@ function getStatisticByMonth(statement: Statement): StatisticsByMounth {
     }
 
     statement.movements.forEach(movement => {
-        if ((movement as Account).id_account) {
-            handleAccountMovement(statistic_by_month, movement as Account)
+        if ((movement as Transaction).id_transaction) {
+            handleTransactionMovement(statistic_by_month, movement as Transaction)
         }
 
         if ((movement as Exchange).id_exchange) {
@@ -53,6 +53,7 @@ function getStatisticsTotal(statistics: StatisticsByMounth[]) {
 
     statistics.forEach(statistic => {
         statistic.movements_by_currency.forEach(st => {
+
             const statistic_index = statistics_total.findIndex(item => item.currency === st.currency)
 
             if (statistic_index < 0) {
@@ -70,16 +71,16 @@ function getStatisticsTotal(statistics: StatisticsByMounth[]) {
     return statistics_total
 }
 
-function handleAccountMovement(statistic_by_month: StatisticsByMounth, movement: Account) {
-    const currency_index = statistic_by_month.movements_by_currency.findIndex(item => item.currency === (movement as Account).currency)
+function handleTransactionMovement(statistic_by_month: StatisticsByMounth, movement: Transaction) {
+    const currency_index = statistic_by_month.movements_by_currency.findIndex(item => item.currency === (movement as Transaction).currency)
 
     if (currency_index < 0) {
         statistic_by_month.movements_by_currency.push({
-            total: (movement as Account).type === "credit" ? (movement as Account).value : (-1 * (movement as Account).value),
-            currency: (movement as Account).currency
+            total: (movement as Transaction).type === "credit" ? (movement as Transaction).value : (-1 * (movement as Transaction).value),
+            currency: (movement as Transaction).currency
         })
     } else {
-        statistic_by_month.movements_by_currency[currency_index].total += (movement as Account).type === "credit" ? (movement as Account).value : (-1 * (movement as Account).value)
+        statistic_by_month.movements_by_currency[currency_index].total += (movement as Transaction).type === "credit" ? (movement as Transaction).value : (-1 * (movement as Transaction).value)
     }
 }
 

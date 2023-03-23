@@ -14,7 +14,7 @@ export type ResponseData<T> = {
 };
 
 export const api = axios.create({
-  baseURL: "http://localhost:3006",
+  baseURL: "http://localhost:3003",
 });
 
 let is_refreshing_token = false;
@@ -35,17 +35,17 @@ api.interceptors.response.use(
 
       if (!is_refreshing_token) {
         is_refreshing_token = true;
-        const { id_refresh_token, user } = cookies.getAll();
+        const { id_refresh_token, user_infos, user_preferences } = cookies.getAll();
 
         if (!id_refresh_token && !isSSR()) {
           window.location.pathname = '/';
         }
 
-        refreshTokenService({ id_refresh_token, id_user: user.id_user })
+        refreshTokenService({ id_refresh_token, id_user: user_infos.id_user })
           .then(({ new_token }) => {
             setCookie(null, "FinancesWeb.token", new_token.token, {
               path: "/",
-              expires: new Date(new_token.expiresIn * 1000),
+              expires: new Date(new_token.expires_in * 1000),
             });
 
             api.defaults.headers.common["auth"] = `Bearer ${new_token.token}`;

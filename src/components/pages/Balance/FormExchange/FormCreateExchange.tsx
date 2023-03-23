@@ -41,7 +41,7 @@ export const FormCreateExchange = ({ onSuccess, onClose }: Props) => {
     output_currency: state?.user?.preferred_currency,
   } as ICreateExchangeDTO);
 
-  const handleCreateAccount = async (e: FormEvent) => {
+  const handleCreateTransaction = async (e: FormEvent) => {
     e.preventDefault();
 
     yupValidator({
@@ -71,7 +71,7 @@ export const FormCreateExchange = ({ onSuccess, onClose }: Props) => {
   };
 
   return (
-    <form onSubmit={handleCreateAccount}>
+    <form onSubmit={handleCreateTransaction}>
       <Grid templateColumns="repeat(2, 1fr)" gap={2} marginBottom={2}>
         <GridItem w="100%">
           <InputText

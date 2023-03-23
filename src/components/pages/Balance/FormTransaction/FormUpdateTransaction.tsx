@@ -2,19 +2,19 @@ import { FormEvent, useState } from "react";
 import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
 
 import {
-  Account,
-  ICreateAccountDTO,
-  IUpdateAccountDTO,
-} from "../../../../types/Account";
+  Transaction,
+  ICreateTransactionDTO,
+  IUpdateTransactionDTO,
+} from "../../../../types/Transaction";
 import { Category } from "../../../../types/Category";
 import { InputText } from "../../../elements/InputText";
 import { Select } from "../../../elements/Select";
 import { useForm } from "react-hook-form";
 import { Currencies } from "../../../../constants/Currencies";
 import { mask } from "../../../../utils/masks";
-import { CreateAccountSchema } from "./CreateAccountSchema";
+import { CreateTransactionSchema } from "./CreateTransactionSchema";
 import { currencyMaskToNumber } from "../../../../utils/masks/currencyMask";
-import { accountService } from "../../../../services/Accounts";
+import { transactionService } from "../../../../services/Transaction";
 import { yupValidator } from "../../../../utils/yupValidation";
 import { useSelector } from "react-redux";
 import { useAuthenticateUser } from "../../../../store";
@@ -22,16 +22,17 @@ import { dateFormat } from "../../../../utils/date";
 
 interface Props {
   categories: Category[];
-  defaultData: IUpdateAccountDTO;
+  defaultData: IUpdateTransactionDTO;
   onSuccess: () => void;
   onClose: () => void;
 }
 
-interface IUpdateAccountInputValues extends Omit<IUpdateAccountDTO, "value"> {
+interface IUpdateTransactionInputValues
+  extends Omit<IUpdateTransactionDTO, "value"> {
   value: string;
 }
 
-export const FormUpdateAccount = ({
+export const FormUpdateTransaction = ({
   categories,
   defaultData,
   onSuccess,
@@ -45,18 +46,18 @@ export const FormUpdateAccount = ({
 
   const state = useSelector(useAuthenticateUser);
 
-  const [data, setData] = useState<IUpdateAccountInputValues>({
+  const [data, setData] = useState<IUpdateTransactionInputValues>({
     ...defaultData,
-    value: mask.currency(`${defaultData.value.toFixed(2)}`),
+    value: mask.currency(`${defaultData.value}`),
     date: dateFormat.y_m_d(defaultData.date),
-    currency: state?.user?.preferred_currency,
-  } as IUpdateAccountInputValues);
+    currency: defaultData.currency,
+  } as IUpdateTransactionInputValues);
 
-  const handleCreateAccount = async (e: FormEvent) => {
+  const handleCreateTransaction = async (e: FormEvent) => {
     e.preventDefault();
 
     yupValidator({
-      schema: CreateAccountSchema,
+      schema: CreateTransactionSchema,
       data,
       setError,
       onSuccess: () => {
@@ -65,7 +66,7 @@ export const FormUpdateAccount = ({
           value: currencyMaskToNumber(`${data.value}`),
         };
 
-        accountService
+        transactionService
           .update(dto)
           .then(() => {
             onSuccess();
@@ -81,29 +82,26 @@ export const FormUpdateAccount = ({
   };
 
   return (
-    <form onSubmit={handleCreateAccount}>
-      {defaultData.type === "debit" && (
-        <Box marginBottom={2}>
-          <Select
-            name="id_category"
-            label="Category"
-            control={control}
-            options={[
-              ...categories.map((category) => ({
-                name: category.name,
-                value: category.id_category,
-              })),
-              {
-                name: "Sem categoría",
-                value: "",
-              },
-            ]}
-            value={data.id_category}
-            onChange={(e) => handleChange("id_category", e.target.value)}
-          />
-        </Box>
-      )}
-
+    <form onSubmit={handleCreateTransaction}>
+      <Box marginBottom={2}>
+        <Select
+          name="id_category"
+          label="Category"
+          control={control}
+          options={[
+            ...categories.map((category) => ({
+              name: category.name,
+              value: category.id_category,
+            })),
+            {
+              name: "Sem categoría",
+              value: "",
+            },
+          ]}
+          value={data.id_category}
+          onChange={(e) => handleChange("id_category", e.target.value)}
+        />
+      </Box>
       <Box marginBottom={2}>
         <InputText
           name="description"
@@ -139,7 +137,6 @@ export const FormUpdateAccount = ({
           />
         </GridItem>
       </Grid>
-
       <Grid gap={2} marginBottom={8}>
         <GridItem w="100%">
           <InputText
@@ -152,7 +149,6 @@ export const FormUpdateAccount = ({
           />
         </GridItem>
       </Grid>
-
       <Box>
         <Button
           colorScheme="teal"

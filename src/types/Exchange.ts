@@ -3,7 +3,7 @@ import { Currency } from "../enums/Currency";
 /* export type Statement_ = {
     year: number;
     month: number;
-    accounts: Account[];
+    transactions: Transaction[];
 } */
 
 export type Exchange = {

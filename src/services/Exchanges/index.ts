@@ -13,13 +13,12 @@ class ExchangeService {
     }
 
     delete(id_exchange: string) {
-        console.log({ id_exchange })
-        return this.api.delete(`${this.route}?id_exchange=${id_exchange}`)
+        return this.api.delete(`${this.route}/${id_exchange}`)
     }
 
     /*  
-    update(dto: IUpdateAccountDTO) {
-        return this.api.put(`${this.route}?id_account=${dto.id_account}`, dto)
+    update(dto: IUpdateTransactionDTO) {
+        return this.api.put(`${this.route}?id_transaction=${dto.id_transaction}`, dto)
     } */
 
 }

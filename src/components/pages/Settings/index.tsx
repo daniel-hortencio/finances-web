@@ -49,7 +49,6 @@ export const Settings = () => {
       .updateUserPreferences(data)
       .then((res) => {
         dispatch(setUserPreferences(data));
-        console.log({ res });
       })
       .catch((err) => console.log({ err }));
   };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import { Modal } from "../../elements/Modal";
 import { FormCreateCategory } from "./FormCategory/FormCreateCategory";
 import { useDispatch, useSelector } from "react-redux";
@@ -106,23 +106,61 @@ export const Categories = () => {
         )}
       </Modal>
 
-      <Grid templateColumns="repeat(auto-fit, minmax(16rem, 1fr))" gap={2}>
-        {state.categories.map((category: Category) => (
-          <GridItem key={category.id_category}>
-            <CardCategory
-              category={category}
-              handleDelete={() => {
-                setCategoryToDelete(category);
-                openModal("delete", "Delete Category");
-              }}
-              handleEdit={() => {
-                setCategoryToUpdate(category);
-                openModal("update", "Update Category");
-              }}
-            />
-          </GridItem>
-        ))}
-      </Grid>
+      <Box
+        bg="white"
+        padding={2}
+        boxShadow="base"
+        borderRadius="md"
+        marginBottom={6}
+      >
+        <Heading size="md" mb={4}>
+          Credit
+        </Heading>
+        <Grid templateColumns="repeat(3, minmax(16rem, 1fr))" gap={2}>
+          {state.categories
+            .filter((category) => category.type === "credit")
+            .map((category: Category) => (
+              <GridItem key={category.id_category}>
+                <CardCategory
+                  category={category}
+                  handleDelete={() => {
+                    setCategoryToDelete(category);
+                    openModal("delete", "Delete Category");
+                  }}
+                  handleEdit={() => {
+                    setCategoryToUpdate(category);
+                    openModal("update", "Update Category");
+                  }}
+                />
+              </GridItem>
+            ))}
+        </Grid>
+      </Box>
+
+      <Box bg="white" padding={2} boxShadow="base" borderRadius="md">
+        <Heading size="md" mb={4}>
+          Debit
+        </Heading>
+        <Grid templateColumns="repeat(3, minmax(16rem, 1fr))" gap={2}>
+          {state.categories
+            .filter((category) => category.type === "debit")
+            .map((category: Category) => (
+              <GridItem key={category.id_category}>
+                <CardCategory
+                  category={category}
+                  handleDelete={() => {
+                    setCategoryToDelete(category);
+                    openModal("delete", "Delete Category");
+                  }}
+                  handleEdit={() => {
+                    setCategoryToUpdate(category);
+                    openModal("update", "Update Category");
+                  }}
+                />
+              </GridItem>
+            ))}
+        </Grid>
+      </Box>
     </>
   );
 };

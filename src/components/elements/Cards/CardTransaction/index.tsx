@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 import Icon from "../../Icon";
-import { AccountType } from "../../../../types/Account";
+import { TransactionType } from "../../../../types/Transaction";
 import { Currency } from "../../../../enums/Currency";
 
 import { Category } from "../../../../types/Category";
@@ -21,13 +21,13 @@ interface Props {
   date: string;
   description: string;
   currency: Currency;
-  type: AccountType;
+  type: TransactionType;
   category: Omit<Category, "id_category" | "created_at" | "id_user">;
   handleDelete: () => void;
   handleEdit: () => void;
 }
 
-export const CardAccount = ({
+export const CardTransaction = ({
   value,
   description,
   date,
@@ -46,31 +46,15 @@ export const CardAccount = ({
       boxShadow="base"
       bg="white"
     >
-      {type === "debit" ? (
-        <Box
-          bg={category.background_color}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width={10}
-        >
-          <Icon
-            name={category.icon_name}
-            color={category.icon_color}
-            size={20}
-          />
-        </Box>
-      ) : (
-        <Box
-          bg="#17a589"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width={10}
-        >
-          <Icon name="FaHandHoldingUsd" color="#fff" size={24} />
-        </Box>
-      )}
+      <Box
+        bg={category.background_color}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        width={10}
+      >
+        <Icon name={category.icon_name} color={category.icon_color} size={20} />
+      </Box>
 
       <Box
         display="flex"
@@ -83,11 +67,11 @@ export const CardAccount = ({
         </Text>
         <Box display="flex" alignItems="center">
           <Icon
-            name={type === "credit" ? "FiPlus" : "FiMinus"}
+            name={type === "credit" ? "FaArrowUp" : "FaArrowDown"}
             color={type === "credit" ? "#17a589" : "#e74c3c"}
           />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${value.toFixed(2)}`)}</strong> {currency}
+            <strong>{currencyMask(`${value}`)}</strong> {currency}
           </Text>
         </Box>
       </Box>

@@ -9,10 +9,8 @@ import {
 } from "@chakra-ui/react";
 
 import Icon from "../../Icon";
-import { AccountType } from "../../../../types/Account";
 import { Currency } from "../../../../enums/Currency";
 
-import { Category } from "../../../../types/Category";
 import { currencyMask } from "../../../../utils/masks/currencyMask";
 import { dateFormat } from "../../../../utils/date";
 
@@ -64,14 +62,12 @@ export const CardExchange = ({
         <Box display="flex" alignItems="center">
           <Icon name="FiMinus" color="#e74c3c" />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${input_value.toFixed(2)}`)}</strong>{" "}
-            {input_currency}
+            <strong>{currencyMask(`${input_value}`)}</strong> {input_currency}
           </Text>
           <Box border="solid 1px #ccc" height="100%" marginX={6} />
           <Icon name="FiPlus" color="#17a589" />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${output_value.toFixed(2)}`)}</strong>{" "}
-            {output_currency}
+            <strong>{currencyMask(`${output_value}`)}</strong> {output_currency}
           </Text>
         </Box>
       </Box>

@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
 export const CreateCategorySchema = yup.object().shape({
-    name: yup.string().required("VALUE_REQUIRED")
+    name: yup.string().required("VALUE_REQUIRED"),
+    type: yup.string().required("VALUE_REQUIRED"),
 });

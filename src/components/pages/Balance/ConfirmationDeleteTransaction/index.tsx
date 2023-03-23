@@ -1,21 +1,25 @@
 import { Box, Button, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 
-import { accountService } from "../../../../services/Accounts";
-import { Account } from "../../../../types/Account";
+import { transactionService } from "../../../../services/Transaction";
+import { Transaction } from "../../../../types/Transaction";
 import { dateFormat } from "../../../../utils/date";
 import { currencyMask } from "../../../../utils/masks/currencyMask";
 import Icon from "../../../elements/Icon";
 
 interface Props {
-  account: Account | null;
+  transaction: Transaction | null;
   onSuccess: () => void;
   onClose: () => void;
 }
 
-export const FormDeleteAccount = ({ account, onSuccess, onClose }: Props) => {
+export const FormDeleteTransaction = ({
+  transaction,
+  onSuccess,
+  onClose,
+}: Props) => {
   function handleDelete() {
-    if (account) {
-      accountService.delete(account?.id_account).then(() => {
+    if (transaction) {
+      transactionService.delete(transaction?.id_transaction).then(() => {
         onSuccess();
         onClose();
       });
@@ -31,17 +35,19 @@ export const FormDeleteAccount = ({ account, onSuccess, onClose }: Props) => {
         Tem certeza que deseja excluir essa conta?
       </Heading>
       <Text fontSize={18} mb={2}>
-        {dateFormat.d_m_y(account?.date as string)} -{" "}
+        {dateFormat.d_m_y(transaction?.date as string)} -{" "}
         <Text fontWeight="semibold" as="strong">
-          {account?.description}
+          {transaction?.description}
         </Text>
       </Text>
       <Box display="flex" alignItems="center">
         <Icon
-          name={account?.type === "credit" ? "FiPlusCircle" : "FiMinusCircle"}
+          name={
+            transaction?.type === "credit" ? "FiPlusCircle" : "FiMinusCircle"
+          }
         />
         <Text fontSize={18} ml={2}>
-          {currencyMask(`${account?.value}`)} {account?.currency}
+          {currencyMask(`${transaction?.value}`)} {transaction?.currency}
         </Text>
       </Box>
 

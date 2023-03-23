@@ -1,3 +1,5 @@
+import { TransactionType } from "./Transaction";
+
 export type Category = {
   id_category: string;
   name: string;
@@ -6,6 +8,7 @@ export type Category = {
   icon_name: string;
   created_at: Date;
   id_user: string;
+  type: TransactionType;
 }
 
 export type ICreateCategoryDTO = Omit<Category, "id_category" | "id_user" | "created_at">

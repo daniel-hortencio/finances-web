@@ -17,11 +17,11 @@ class CategoriesService {
     }
 
     update(dto: IUpdateCategoryDTO) {
-        return this.api.put(`${this.route}?id_category=${dto.id_category}`, dto)
+        return this.api.put(`${this.route}/${dto.id_category}`, dto)
     }
 
     delete(id_category: string) {
-        return this.api.delete(`${this.route}?id_category=${id_category}`)
+        return this.api.delete(`${this.route}/${id_category}`)
     }
 
 }

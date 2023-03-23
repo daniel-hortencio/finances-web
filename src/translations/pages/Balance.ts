@@ -6,7 +6,7 @@ export const TranslationsPageBalance = (language?: Language) => {
     const translations = {
         title: {
             PT: "Histórico da Conta",
-            ENG: "Account History",
+            ENG: "Transaction History",
             ESP: "Histórico de Cuenta"
         }
     }

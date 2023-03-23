@@ -1,8 +1,8 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { accountService } from "../services/Accounts";
+import { transactionService } from "../services/Transaction";
 import { api } from "../services/api";
-import { Account, Statement } from "../types/Account";
+import { Transaction, Statement } from "../types/Transaction";
 import { Category } from "../types/Category";
 import { UpdateUserPreferencesDTO, User } from "../types/User";
 import { cookies } from "../utils/cookies";
@@ -17,13 +17,16 @@ export const userSlice = createSlice({
 
       setCookie(null, "FinancesWeb.token", payload.token, {
         path: "/",
-        expires: new Date(payload.refresh_token.expiresIn * 1000),
+        expires: new Date(payload.refresh_token.expires_in * 1000),
       });
       setCookie(
         null,
         "FinancesWeb.refresh_token",
         payload.refresh_token.id_refresh_token,
-        { path: "/", expires: new Date(payload.refresh_token.expiresIn * 1000) }
+        {
+          path: "/",
+          expires: new Date(payload.refresh_token.expires_in * 1000),
+        }
       );
       setCookie(
         null,
@@ -35,7 +38,7 @@ export const userSlice = createSlice({
         }),
         {
           path: "/",
-          expires: new Date(payload.refresh_token.expiresIn * 1000),
+          expires: new Date(payload.refresh_token.expires_in * 1000),
         }
       );
 
@@ -48,7 +51,7 @@ export const userSlice = createSlice({
         }),
         {
           path: "/",
-          expires: new Date(payload.refresh_token.expiresIn * 1000),
+          expires: new Date(payload.refresh_token.expires_in * 1000),
         }
       );
 

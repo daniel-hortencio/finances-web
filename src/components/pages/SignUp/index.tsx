@@ -11,7 +11,7 @@ const SignUp = () => {
     setIsLoading(true);
 
     userService
-      .create(data)
+      .register(data)
       .then((res) => console.log({ res }))
       .catch((err) => console.log({ err }))
       .finally(() => setIsLoading(false));

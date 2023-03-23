@@ -6,8 +6,8 @@ import { api } from "../api";
 class UserService {
     constructor(private readonly api: AxiosInstance) { }
 
-    create(dto: CreateUserDTO) {
-        return this.api.post("/create-user", dto)
+    register(dto: CreateUserDTO) {
+        return this.api.post("/register-user", dto)
     }
 
     signIn(dto: SignInUserDTO) {

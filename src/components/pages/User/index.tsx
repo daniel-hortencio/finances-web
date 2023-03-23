@@ -41,8 +41,6 @@ export const User = () => {
 
   const state = useSelector(useAuthenticateUser);
 
-  console.log({ user: state.user });
-
   useEffect(() => {
     if (state.user) {
       setData({

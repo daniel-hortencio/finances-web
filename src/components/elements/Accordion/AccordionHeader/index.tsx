@@ -1,7 +1,7 @@
 import { Box, Text, AccordionButton, AccordionIcon } from "@chakra-ui/react";
 import { ReactCountryFlag } from "react-country-flag";
 import { getMonth } from "../../../../utils/getMonth";
-import { Statement } from "../../../../types/Account";
+import { Statement } from "../../../../types/Transaction";
 import { getStatistic } from "../../../../utils/getStatistic";
 import { currencyMask } from "../../../../utils/masks/currencyMask";
 import Icon from "../../Icon";
@@ -33,7 +33,7 @@ export const AccordionHeader = ({ statement }: Props) => {
             />{" "}
             <Text>
               <Text as="strong" mr={2}>
-                {currencyMask(`${balance_by_currency.total.toFixed(2)}`)}
+                {currencyMask(`${balance_by_currency.total}`)}
               </Text>
               <Text as="strong" mr={2}>
                 {balance_by_currency.currency}

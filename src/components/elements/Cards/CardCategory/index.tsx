@@ -1,7 +1,7 @@
 import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
 
 import Icon from "../../Icon";
-import { Account, AccountType } from "../../../../types/Account";
+import { Transaction, TransactionType } from "../../../../types/Transaction";
 import { Currency } from "../../../../enums/Currency";
 
 import { Category } from "../../../../types/Category";
