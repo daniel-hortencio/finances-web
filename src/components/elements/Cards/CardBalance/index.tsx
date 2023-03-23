@@ -1,9 +1,10 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 import Icon from "../../Icon";
 import { Currency } from "../../../../enums/Currency";
 
 import { currencyMask } from "../../../../utils/masks/currencyMask";
+import ReactCountryFlag from "react-country-flag";
 
 interface Props {
   value: number;
@@ -23,7 +24,20 @@ export const CardBalance = ({ value, currency }: Props) => {
       marginRight={2}
       width="min-content"
     >
-      <strong>{currency}</strong>{" "}
+      <Box display="flex" alignItems="center">
+        <Text as="strong" marginRight={2}>
+          {currency}
+        </Text>{" "}
+        <ReactCountryFlag
+          countryCode={currency}
+          svg
+          style={{
+            width: "1em",
+            height: "1em",
+          }}
+          title={currency}
+        />
+      </Box>
       <Box display="flex" alignItems="center">
         <Icon
           name={value > 0 ? "FiPlus" : "FiMinus"}

@@ -152,7 +152,7 @@ export const Balance = () => {
         <Heading size="md" mb={2}>
           Balance
         </Heading>
-        <Box display="flex">
+        <Box display="flex" flexWrap="wrap">
           {balance ? (
             balance?.map((balance) => (
               <CardBalance

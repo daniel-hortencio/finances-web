@@ -1,8 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { transactionService } from "../services/Transaction";
+import { setCookie, destroyCookie } from "nookies";
 import { api } from "../services/api";
-import { Transaction, Statement } from "../types/Transaction";
+import { Statement } from "../types/Transaction";
 import { Category } from "../types/Category";
 import { UpdateUserPreferencesDTO, User } from "../types/User";
 import { cookies } from "../utils/cookies";
@@ -22,7 +21,10 @@ export const userSlice = createSlice({
       setCookie(
         null,
         "FinancesWeb.refresh_token",
-        payload.refresh_token.id_refresh_token,
+        JSON.stringify({
+          id_refresh_token: payload.refresh_token.id_refresh_token,
+          expires_in: payload.refresh_token.expires_in * 1000,
+        }),
         {
           path: "/",
           expires: new Date(payload.refresh_token.expires_in * 1000),
@@ -70,10 +72,53 @@ export const userSlice = createSlice({
       const { language, preferred_currency } =
         payload as UpdateUserPreferencesDTO;
 
+      const {
+        refresh_token: { expires_in },
+      } = cookies.getAll();
+
+      setCookie(
+        null,
+        "FinancesWeb.userPreferences",
+        JSON.stringify({
+          language,
+          preferred_currency,
+        }),
+        {
+          path: "/",
+          expires: new Date(expires_in),
+        }
+      );
+
       return {
         ...(state as User),
         language,
         preferred_currency,
+      };
+    },
+    setUserInfoData: (state, { payload }) => {
+      const { name } = payload as User;
+
+      const {
+        refresh_token: { expires_in },
+      } = cookies.getAll();
+
+      setCookie(
+        null,
+        "FinancesWeb.userInfos",
+        JSON.stringify({
+          id_user: state?.id_user,
+          name,
+          email: state?.email,
+        }),
+        {
+          path: "/",
+          expires: new Date(expires_in),
+        }
+      );
+
+      return {
+        ...(state as User),
+        name,
       };
     },
     recoverUserByCookies: () => {
@@ -149,6 +194,7 @@ export const {
   logoutUser,
   recoverUserByCookies,
   setUserPreferences,
+  setUserInfoData,
 } = userSlice.actions;
 export const { setStatement } = statementSlice.actions;
 export const { setCategories, removeCategory } = categoriesSlice.actions;

@@ -43,11 +43,9 @@ export const Settings = () => {
   const handleUpdateUser = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (isNotChanged) return;
-
     userService
       .updateUserPreferences(data)
-      .then((res) => {
+      .then(() => {
         dispatch(setUserPreferences(data));
       })
       .catch((err) => console.log({ err }));

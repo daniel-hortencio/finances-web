@@ -11,13 +11,13 @@ export const cookies = {
     getAll: () => {
         const cookies = parseCookies()
 
-        const id_refresh_token = cookies[cookies_names.refreshToken]
+        const refresh_token = cookies[cookies_names.refreshToken]
         const token = cookies[cookies_names.token]
         const user_infos_cookie = cookies[cookies_names.user_infos]
         const user_preferences_cookie = cookies[cookies_names.user_preferences]
 
         return {
-            id_refresh_token,
+            refresh_token: refresh_token ? JSON.parse(refresh_token) : undefined,
             token,
             user_infos: user_infos_cookie ? JSON.parse(user_infos_cookie) : undefined,
             user_preferences: user_preferences_cookie ? JSON.parse(user_preferences_cookie) : undefined

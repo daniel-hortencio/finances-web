@@ -31,24 +31,22 @@ export const AccordionHeader = ({ statement }: Props) => {
               name={balance_by_currency.total < 0 ? "FiMinus" : "FiPlus"}
               color={balance_by_currency.total > 0 ? "#17a589" : "#e74c3c"}
             />{" "}
-            <Text>
+            <Box display="flex" alignItems="center">
               <Text as="strong" mr={2}>
-                {currencyMask(`${balance_by_currency.total}`)}
+                {currencyMask(`${balance_by_currency.total.toFixed(2)}`)}
               </Text>
-              <Text as="strong" mr={2}>
-                {balance_by_currency.currency}
-              </Text>
+              <Text mr={2}>{balance_by_currency.currency}</Text>
 
               <ReactCountryFlag
                 countryCode={balance_by_currency.currency}
                 svg
                 style={{
-                  width: "1.5em",
-                  height: "1.5em",
+                  width: "1em",
+                  height: "1em",
                 }}
-                title="US"
+                title={balance_by_currency.currency}
               />
-            </Text>
+            </Box>
           </Box>
         ))}
       </Box>

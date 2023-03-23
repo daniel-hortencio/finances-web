@@ -53,24 +53,50 @@ export const CardExchange = ({
       </Box>
 
       <Box
-        display="flex"
+        display={{ md: "flex" }}
         justifyContent="space-between"
         flex="auto"
         padding={2}
       >
-        <Text>{dateFormat.d_m(date)} - Exchange</Text>
-        <Box display="flex" alignItems="center">
-          <Icon name="FaArrowDown" color="#e74c3c" />{" "}
-          <Text marginLeft={2}>
-            <strong>{currencyMask(`${input_value.toFixed(2)}`)}</strong>{" "}
-            {input_currency}
+        <Text
+          marginBottom={{ base: 2, md: 0 }}
+          display={{ base: "initial", md: "flex" }}
+        >
+          <Text fontSize={{ base: "sm", md: "medium" }}>
+            {dateFormat.d_m(date)}
+          </Text>{" "}
+          <Text display={{ base: "none", md: "initial" }} marginX={1}>
+            -
+          </Text>{" "}
+          <Text
+            fontSize={{ base: "lg", md: "medium" }}
+            marginBottom={{ base: 2, md: 0 }}
+          >
+            Exchange
           </Text>
-          <Box border="solid 1px #ccc" height="100%" marginX={6} />
-          <Icon name="FaArrowUp" color="#17a589" />{" "}
-          <Text marginLeft={2}>
-            <strong>{currencyMask(`${output_value.toFixed(2)}`)}</strong>{" "}
-            {output_currency}
-          </Text>
+        </Text>
+
+        <Box display={{ md: "flex" }} alignItems={{ md: "center" }}>
+          <Box display="flex" alignItems="center">
+            <Icon name="FaArrowDown" color="#e74c3c" />{" "}
+            <Text marginLeft={2}>
+              <strong>{currencyMask(`${input_value.toFixed(2)}`)}</strong>{" "}
+              {input_currency}
+            </Text>
+            <Box
+              border="solid 1px #ccc"
+              height="100%"
+              marginX={6}
+              display={{ base: "none", md: "initial" }}
+            />
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Icon name="FaArrowUp" color="#17a589" />{" "}
+            <Text marginLeft={2}>
+              <strong>{currencyMask(`${output_value.toFixed(2)}`)}</strong>{" "}
+              {output_currency}
+            </Text>
+          </Box>
         </Box>
       </Box>
       <Box>

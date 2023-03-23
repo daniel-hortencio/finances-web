@@ -8,17 +8,19 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { Currencies } from "../../../constants/Currencies";
-import { Languages } from "../../../constants/Languages";
+import { useDispatch, useSelector } from "react-redux";
 import { Currency } from "../../../enums/Currency";
 import { Language } from "../../../enums/Language";
-import { useAuthenticateUser } from "../../../store";
+import { userService } from "../../../services/User";
+import {
+  setUserInfoData,
+  setUserPreferences,
+  useAuthenticateUser,
+} from "../../../store";
 import { InputPassword } from "../../elements/InputPassword";
 import { InputText } from "../../elements/InputText";
-import { Select } from "../../elements/Select";
 
 export const User = () => {
   const [data, setData] = useState<{
@@ -40,6 +42,7 @@ export const User = () => {
   } = useForm();
 
   const state = useSelector(useAuthenticateUser);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (state.user) {
@@ -55,6 +58,21 @@ export const User = () => {
     setData((data) => ({ ...data, [param]: value }));
   };
 
+  const handleUpdateUser = async (e: FormEvent) => {
+    e.preventDefault();
+
+    console.log({ data });
+
+    userService
+      .updateUserInfos(data)
+      .then(() => {
+        dispatch(setUserInfoData(data));
+      })
+      .catch((err) => console.log({ err }));
+  };
+
+  const profile_not_changed = data.name === state.user?.name;
+
   return (
     <Box bg="white" padding={2} boxShadow="base" borderRadius="md">
       <Tabs colorScheme="teal">
@@ -67,7 +85,7 @@ export const User = () => {
             <Heading size="md" mt={4} mb={8}>
               User Data
             </Heading>
-            <form>
+            <form onSubmit={handleUpdateUser}>
               <Box marginBottom={2}>
                 <InputText
                   name="name"
@@ -92,7 +110,7 @@ export const User = () => {
                   colorScheme="teal"
                   size="md"
                   type="submit"
-                  //isLoading={isLoading}
+                  disabled={profile_not_changed}
                 >
                   Update
                 </Button>
@@ -133,7 +151,7 @@ export const User = () => {
                   type="submit"
                   //isLoading={isLoading}
                 >
-                  Update
+                  Update aqui
                 </Button>
               </Box>
             </form>

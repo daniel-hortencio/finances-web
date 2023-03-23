@@ -15,11 +15,11 @@ class UserService {
     }
 
     updateUserPreferences(dto: UpdateUserPreferencesDTO) {
-        return this.api.put("/user/preferences", dto)
+        return this.api.patch("/user/preferences", dto)
     }
 
     updateUserInfos(dto: UpdateUserInfosDTO) {
-        return this.api.put("/user/infos", dto)
+        return this.api.patch("/user/infos", dto)
     }
 
     logout() {

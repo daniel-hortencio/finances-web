@@ -35,13 +35,13 @@ api.interceptors.response.use(
 
       if (!is_refreshing_token) {
         is_refreshing_token = true;
-        const { id_refresh_token, user_infos, user_preferences } = cookies.getAll();
+        const { refresh_token, user_infos, user_preferences } = cookies.getAll();
 
-        if (!id_refresh_token && !isSSR()) {
+        if (!refresh_token.id_refresh_token && !isSSR()) {
           window.location.pathname = '/';
         }
 
-        refreshTokenService({ id_refresh_token, id_user: user_infos.id_user })
+        refreshTokenService({ id_refresh_token: refresh_token.id_refresh_token, id_user: user_infos.id_user })
           .then(({ new_token }) => {
             setCookie(null, "FinancesWeb.token", new_token.token, {
               path: "/",
@@ -75,6 +75,8 @@ api.interceptors.response.use(
             return resolve(api(initial_config).then((res) => res));
           },
           onFailure: (err: any) => {
+            console.log({ err })
+
             const { status } = err.response;
             const { message } = err.response.data;
 

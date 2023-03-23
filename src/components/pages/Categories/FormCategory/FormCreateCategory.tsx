@@ -150,6 +150,16 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
                 bg="white"
                 padding={2}
               >
+                <Button
+                  bg="#ffffff"
+                  border="solid 2px #dddd"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      background_color: "#ffffff",
+                    }))
+                  }
+                ></Button>
                 {colors.map((color) => (
                   <Button
                     key={color}
@@ -162,6 +172,15 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
                     }
                   ></Button>
                 ))}
+                <Button
+                  bg="#000000"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      background_color: "#000000",
+                    }))
+                  }
+                ></Button>
               </Grid>
             </Box>
           </>
@@ -288,6 +307,16 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
                 bg="white"
                 padding={2}
               >
+                <Button
+                  bg="#ffffff"
+                  border="solid 2px #dddd"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      icon_color: "#ffffff",
+                    }))
+                  }
+                ></Button>
                 {colors.map((color) => (
                   <Button
                     key={color}
@@ -300,6 +329,15 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
                     }
                   ></Button>
                 ))}
+                <Button
+                  bg="#000000"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      icon_color: "#000000",
+                    }))
+                  }
+                ></Button>
               </Grid>
             </Box>
           </>
@@ -315,7 +353,9 @@ export const FormCreateCategory = ({ onSuccess, onClose }: Props) => {
           value={data.type}
         >
           <Stack direction="row">
-            <Radio value="debit">Debit</Radio>
+            <Radio value="debit" marginRight={4}>
+              Debit
+            </Radio>
             <Radio value="credit">Credit</Radio>
           </Stack>
         </RadioGroup>

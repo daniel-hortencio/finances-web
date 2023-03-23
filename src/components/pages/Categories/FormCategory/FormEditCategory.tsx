@@ -143,6 +143,16 @@ export const FormEditCategory = ({
                 bg="white"
                 padding={2}
               >
+                <Button
+                  bg="#ffffff"
+                  border="solid 2px #dddd"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      background_color: "#ffffff",
+                    }))
+                  }
+                ></Button>
                 {colors.map((color) => (
                   <Button
                     key={color}
@@ -155,6 +165,15 @@ export const FormEditCategory = ({
                     }
                   ></Button>
                 ))}
+                <Button
+                  bg="#000000"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      background_color: "#000000",
+                    }))
+                  }
+                ></Button>
               </Grid>
             </Box>
           </>
@@ -283,6 +302,16 @@ export const FormEditCategory = ({
                 bg="white"
                 padding={2}
               >
+                <Button
+                  bg="#ffffff"
+                  border="solid 2px #dddd"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      icon_color: "#ffffff",
+                    }))
+                  }
+                ></Button>
                 {colors.map((color) => (
                   <Button
                     key={color}
@@ -295,6 +324,15 @@ export const FormEditCategory = ({
                     }
                   ></Button>
                 ))}
+                <Button
+                  bg="#000000"
+                  onClick={() =>
+                    setData((data) => ({
+                      ...data,
+                      icon_color: "#000000",
+                    }))
+                  }
+                ></Button>
               </Grid>
             </Box>
           </>

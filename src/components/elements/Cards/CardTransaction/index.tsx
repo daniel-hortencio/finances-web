@@ -57,13 +57,27 @@ export const CardTransaction = ({
       </Box>
 
       <Box
-        display="flex"
+        display={{ md: "flex" }}
         justifyContent="space-between"
         flex="auto"
         padding={2}
       >
-        <Text>
-          {dateFormat.d_m(date)} - {description}
+        <Text
+          marginBottom={{ base: 2, md: 0 }}
+          display={{ base: "initial", md: "flex" }}
+        >
+          <Text fontSize={{ base: "sm", md: "medium" }}>
+            {dateFormat.d_m(date)}
+          </Text>{" "}
+          <Text display={{ base: "none", md: "initial" }} marginX={1}>
+            -
+          </Text>{" "}
+          <Text
+            fontSize={{ base: "lg", md: "medium" }}
+            marginBottom={{ base: 2, md: 0 }}
+          >
+            {description}
+          </Text>
         </Text>
         <Box display="flex" alignItems="center">
           <Icon
