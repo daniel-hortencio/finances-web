@@ -71,7 +71,7 @@ export const CardTransaction = ({
             color={type === "credit" ? "#17a589" : "#e74c3c"}
           />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${value}`)}</strong> {currency}
+            <strong>{currencyMask(`${value.toFixed(2)}`)}</strong> {currency}
           </Text>
         </Box>
       </Box>

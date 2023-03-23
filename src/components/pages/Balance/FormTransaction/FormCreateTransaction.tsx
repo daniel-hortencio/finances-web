@@ -1,5 +1,5 @@
 import { FormEvent, useMemo, useState } from "react";
-import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
 
 import { ICreateTransactionDTO } from "../../../../types/Transaction";
 import { Category } from "../../../../types/Category";
@@ -15,6 +15,7 @@ import { transactionService } from "../../../../services/Transaction";
 import { yupValidator } from "../../../../utils/yupValidation";
 import { useSelector } from "react-redux";
 import { useAuthenticateUser } from "../../../../store";
+import Icon from "../../../elements/Icon";
 
 interface Props {
   categories: Category[];
@@ -80,6 +81,22 @@ export const FormCreateTransaction = ({
 
   return (
     <form onSubmit={handleCreateTransaction}>
+      <Box
+        marginBottom={4}
+        display="grid"
+        gridTemplateColumns="2rem 1fr"
+        alignItems="center"
+        bg="gray.100"
+        borderRadius={8}
+        padding={2}
+        gap={2}
+      >
+        <Icon name="FiInfo" size={28} color="#aaa" />
+        <Text>
+          <strong>Registre valores de Saída:</strong> compras, despesas, doações
+          feitas, etc.
+        </Text>
+      </Box>
       <Box marginBottom={2}>
         <Select
           name="id_category"
@@ -99,7 +116,6 @@ export const FormCreateTransaction = ({
           onChange={(e) => handleChange("id_category", e.target.value)}
         />
       </Box>
-
       <Box marginBottom={2}>
         <InputText
           name="description"
@@ -136,7 +152,6 @@ export const FormCreateTransaction = ({
           />
         </GridItem>
       </Grid>
-
       <Grid gap={2} marginBottom={8}>
         <GridItem w="100%">
           <InputText
@@ -149,7 +164,6 @@ export const FormCreateTransaction = ({
           />
         </GridItem>
       </Grid>
-
       <Box>
         <Button
           colorScheme="teal"

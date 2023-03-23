@@ -1,7 +1,5 @@
 export const currencyMask = (value: string) => {
-    const value_as_number = parseFloat(value).toFixed(2)
-
-    return value_as_number.replace(/\D/g, "")
+    return value.replace(/\D/g, "")
         .replace(/(\d)(\d{2})$/, "$1,$2")
         .replace(/(?=(\d{3})+(\D))\B/g, ".")
 }

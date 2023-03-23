@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Box, Button, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, Text } from "@chakra-ui/react";
 
 import { InputText } from "../../../elements/InputText";
 import { Select } from "../../../elements/Select";
@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useAuthenticateUser } from "../../../../store";
 import { ICreateExchangeDTO } from "../../../../types/Exchange";
 import { exchangeService } from "../../../../services/Exchanges";
+import Icon from "../../../elements/Icon";
 
 interface Props {
   onSuccess: () => void;
@@ -72,6 +73,23 @@ export const FormCreateExchange = ({ onSuccess, onClose }: Props) => {
 
   return (
     <form onSubmit={handleCreateTransaction}>
+      <Box
+        marginBottom={4}
+        display="grid"
+        gridTemplateColumns="2rem 1fr"
+        alignItems="center"
+        bg="gray.100"
+        borderRadius={8}
+        padding={2}
+        gap={2}
+      >
+        <Icon name="FiInfo" size={28} color="#aaa" />
+        <Text>
+          <strong>Registre Cambios de moeda.</strong> Insira o valor e a moeda
+          que você enviou à casa de cambio e depois o valor e moeda que você
+          recebeu da casa de cambio.
+        </Text>
+      </Box>
       <Grid templateColumns="repeat(2, 1fr)" gap={2} marginBottom={2}>
         <GridItem w="100%">
           <InputText

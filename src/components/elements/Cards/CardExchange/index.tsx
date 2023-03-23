@@ -60,14 +60,16 @@ export const CardExchange = ({
       >
         <Text>{dateFormat.d_m(date)} - Exchange</Text>
         <Box display="flex" alignItems="center">
-          <Icon name="FiMinus" color="#e74c3c" />{" "}
+          <Icon name="FaArrowDown" color="#e74c3c" />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${input_value}`)}</strong> {input_currency}
+            <strong>{currencyMask(`${input_value.toFixed(2)}`)}</strong>{" "}
+            {input_currency}
           </Text>
           <Box border="solid 1px #ccc" height="100%" marginX={6} />
-          <Icon name="FiPlus" color="#17a589" />{" "}
+          <Icon name="FaArrowUp" color="#17a589" />{" "}
           <Text marginLeft={2}>
-            <strong>{currencyMask(`${output_value}`)}</strong> {output_currency}
+            <strong>{currencyMask(`${output_value.toFixed(2)}`)}</strong>{" "}
+            {output_currency}
           </Text>
         </Box>
       </Box>
